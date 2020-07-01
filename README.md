@@ -4,7 +4,7 @@ This is a stand-alone client to use [DUG](https://github.com/helxplatform/dug)Th
 
 ## Prerequisites
 
-Define the API URL for DUG as the environment variable `REACT_APP_HELX_PATH` in `./.env`.
+Define the API URL for DUG as the environment variable `REACT_APP_HELX_PATH` in `./.env`. use `./.env.sample` as a guide.
 
 ## Development
 
