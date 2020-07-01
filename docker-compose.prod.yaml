@@ -1,0 +1,18 @@
+version: '3'
+
+services:
+  client:
+    container_name: helx-search-client
+    build:
+      args:
+        NODE_ENV: production
+        REACT_APP_HELX_PATH: $REACT_APP_HELX_PATH
+      context: .
+      dockerfile: Dockerfile-prod
+    volumes:
+      - ./:/usr/src/app
+      - /usr/src/app/node_modules
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+    ports:
+      - 80:80
+    restart: always
