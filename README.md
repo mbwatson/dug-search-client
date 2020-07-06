@@ -4,7 +4,7 @@ This is a stand-alone client to use [DUG](https://github.com/helxplatform/dug)Th
 
 ## Prerequisites
 
-Define the API URL for DUG as the environment variable `REACT_APP_HELX_PATH` in `./.env`. use `./.env.sample` as a guide.
+Define the API URL for DUG as the environment variable `REACT_APP_HELX_PATH` in `./.env`. use `./.env.sample` as a guide. For the development server, you will need to specify the port with the variable `CLIENT_PORT` on which to serve the application.
 
 ## Development
 
@@ -14,7 +14,7 @@ The devlopment build details are defined in `./docker-compose.yaml` and `./Docke
 $ docker-compose up --build
 ```
 
-Visit `http://localhost:3000` to view the application. Note that one can safely within this containerized environment with hot module reloading.
+Omit the `--build` directive if a build is unecessary. Visit `http://localhost:<CLIENT_PORT>` in a web browser to view the application. Note that one can safely within this containerized environment with hot module reloading.
 
 ## Production
 
