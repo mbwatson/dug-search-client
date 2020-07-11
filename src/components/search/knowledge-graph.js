@@ -5,7 +5,6 @@ const WIDTH = 800
 const HEIGHT = 60
 
 const ScrollableWrapper = styled.div`
-    border-top: 1px solid #ccc;
     overflow-y: auto;
     text-align: center;
     padding-bottom: 0.5rem;
@@ -41,12 +40,12 @@ export const KnowledgeGraph = ({ graph }) => {
     const { nodes, edges } = graph
     const grow = event => setR(7)
     const shrink = event => setR(5)
-
+    
     const sortedEdges = edges.sort((e, f) => e.source_id === f.target_id)
     const sortedNodes = [sortedEdges[0].source_id, ...sortedEdges.map(edge => edge.target_id)].map(id => nodes.find(node => node.id === id))
     const nodeSpacing = WIDTH / nodes.length
 
-    return (
+    return sortedNodes && sortedEdges && (
         <ScrollableWrapper onMouseOver={ grow } onMouseOut={ shrink }>
             <SVG>
                 {

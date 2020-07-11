@@ -12,6 +12,7 @@ export const ResultsTable = ({ results, totalItems, currentPageNumber, perPage, 
             variable={ _source.var || 'N/A' }
             description={ _source.description || 'N/A' }
             instructions={ _source.instructions || 'N/A' }
+            graph={ _source.knowledge_graph.knowledge_graph }
         />
     ))
 }
