@@ -12,7 +12,7 @@ import { IconButton } from './components/buttons'
 import { ChevronLeftIcon, ChevronRightIcon, FirstPageIcon, LastPageIcon } from './components/icons'
 
 const App = () => {
-    const [query, setQuery] = useState('')
+    const [query, setQuery] = useState('thrombosis')
     const [searchedQuery, setSearchedQuery] = useState('')
     const { isLoading, error, results, totalItems, fetchResults } = useSearch()
     const [currentPageNumber, setCurrentPageNumber] = useState(0)
