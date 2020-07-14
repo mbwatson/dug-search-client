@@ -4,12 +4,14 @@ import styled from 'styled-components'
 const WIDTH = 800
 const HEIGHT = 60
 
-const ScrollableWrapper = styled.div`
+const ScrollableWrapper = styled.span`
+    display: block;
     overflow-y: auto;
     text-align: center;
     padding-bottom: 0.5rem;
     transition: opacity 250ms;
     opacity: 0.75;
+    border-top: 1px solid #ccc;
     &:hover {
         opacity: 1.0;
     }
@@ -43,15 +45,15 @@ export const KnowledgeGraph = ({ graph }) => {
     
     const sortedEdges = edges.sort((e, f) => e.source_id === f.target_id)
     const sortedNodes = [sortedEdges[0].source_id, ...sortedEdges.map(edge => edge.target_id)].map(id => nodes.find(node => node.id === id))
-    const nodeSpacing = WIDTH / nodes.length
+    const nodeSpacing = WIDTH / Math.max(nodes.length, edges.length + 1)
 
-    return sortedNodes && sortedEdges && (
+    return nodes.length === edges.length + 1 && sortedNodes && sortedEdges && (
         <ScrollableWrapper onMouseOver={ grow } onMouseOut={ shrink }>
             <SVG>
                 {
                     sortedEdges.map((edge, i) => (
-                        <Fragment>
-                            <line stroke-width="0.5" stroke="var(--color-eggplant)"
+                        <Fragment key={ i }>
+                            <line strokeWidth="0.5" stroke="var(--color-eggplant)"
                                 x1={ nodeSpacing / 2 + i * nodeSpacing } y1={ HEIGHT / 2 }
                                 x2={  3 * nodeSpacing / 2 + i * nodeSpacing  } y2={ HEIGHT / 2 }
                             />
@@ -61,7 +63,7 @@ export const KnowledgeGraph = ({ graph }) => {
                 }
                 {
                     sortedNodes.map((node, i) => (
-                        <Fragment>
+                        <Fragment key={ i }>
                             <circle cx={ nodeSpacing / 2 + i * nodeSpacing} cy={ HEIGHT / 2 } r={ r } fill="var(--color-crimson)" style={{ transition: 'r 500ms' }} />
                             <NodeLabel x={ nodeSpacing / 2 + i * nodeSpacing } y={ HEIGHT - 5 } textAnchor="middle">{ node.name }</NodeLabel>
                         </Fragment>

@@ -90,11 +90,7 @@ export const Result = ({ index, name, variable, study, studyId, description, ins
                     <strong>Instructions:</strong> { instructions }
                 </Paragraph>
 
-                <hr color="transparent" style={{ borderBottom: '1px solid #ccc' }} />
-                
-                <Paragraph center style={{ color: '#999' }}>
-                    { graph ? <KnowledgeGraph graph={ graph } /> : <em>Knowledge Graph Unavailable</em> }
-                </Paragraph>
+                { graph && <KnowledgeGraph graph={ graph } /> }
 
             </Collapser>
 
@@ -106,7 +102,7 @@ Result.propTypes = {
     name: PropTypes.string.isRequired,
     variable: PropTypes.string.isRequired,
     study: PropTypes.string.isRequired,
-    index: PropTypes.string.isRequired,
+    index: PropTypes.number.isRequired,
     studyId: PropTypes.string.isRequired,
     description: PropTypes.string.isRequired,
     instructions: PropTypes.string.isRequired,
