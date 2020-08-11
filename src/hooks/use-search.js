@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import axios from 'axios'
 
-const HELX_SEARCH_URL = `https://search.helx-dev.renci.org/search`
+const HELX_SEARCH_URL = `http://localhost:5551/search`
 
 export const useSearch = () => {
     const [isLoading, setIsLoading] = useState(false)

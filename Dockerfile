@@ -7,8 +7,6 @@ WORKDIR /usr/src/app
 
 # Install and cache app dependencies
 COPY ./package.json ./
-RUN pwd
-RUN ls -la
 RUN npm install
 
 expose 3000
