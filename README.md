@@ -2,26 +2,28 @@
 
 This is a stand-alone client to use [DUG](https://github.com/helxplatform/dug)This is a [React](https://reactjs.org/) app containerized for development and production with [Docker Compose](https://docs.docker.com/compose/).
 
-## Prerequisites
+## Environment Variables
 
-Define the API URL for DUG as the environment variable `REACT_APP_HELX_PATH` in `./.env`. use `./.env.sample` as a guide. For the development server, you will need to specify the port with the variable `CLIENT_PORT` on which to serve the application.
+Define the API URL for DUG as the environment variable `REACT_APP_HELX_PATH` in `.env`. use `.env.example` as a guide. The development server will be accessible on port 3030, unless the variable `CLIENT_PORT` is specified differently in `.env`.
+
+Production deeployment defaults to port 80.
 
 ## Development
 
-The devlopment build details are defined in `./docker-compose.yaml` and `./Dockerfile`. This compose file is used by default when executing the following command.
+The development build details are defined in `./docker-compose.yaml` and `./Dockerfile`. This compose file is used by default when executing the following command.
 
 ```bash
-$ docker-compose up --build
+$ docker-compose up
 ```
 
-Omit the `--build` directive if a build is unecessary. Visit `http://localhost:<CLIENT_PORT>` in a web browser to view the application. Note that one can safely within this containerized environment with hot module reloading.
+Add the `--build` directive if a build is ecessary. Visit `http://localhost:<CLIENT_PORT>` in a web browser to view the application. Note that one can take advantage with hot module reloading within this containerized development environment.
 
 ## Production
 
 The production build details are defined in `./docker-compose.prod.yaml` and `./Dockerfile-prod`. Be sure to specify this compose file when building for production with the following command.
 
 ```bash
-$ docker-compose -f docker-compose.prod.yaml up --build
+$ docker-compose -f docker-compose.prod.yaml up
 ```
 
-For production, this deployment uses a multi-stage build (Node to build, Nginx to deploy), thus we make use of the Nginx configuration file `./nginx.conf`. This deploys to the host machine's port 80.
+Again, add the ` --build` flag to force a rebuild. This deployment makes use of a multi-stage build&mdash;Node to build, Nginx to deploy&mdash;thus we make use of the Nginx configuration file `./nginx.conf`. This deploys to the host machine's port 80.

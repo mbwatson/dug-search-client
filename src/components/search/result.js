@@ -1,19 +1,18 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
+import axios from 'axios'
 import styled from 'styled-components'
-import { useWindowWidth } from '../../hooks'
-import { Heading, Paragraph } from '../typography'
+import { useSearch } from '../../hooks'
+import { Subheading, Paragraph } from '../typography'
 import { Collapser } from '../collapser'
-import { KnowledgeGraph } from '../search'
-
-const DB_GAP_URL = `https://www.ncbi.nlm.nih.gov/projects/gap/cgi-bin/variable.cgi`
+import { KnowledgeGraphs } from '../search'
+import { VariablesList } from './study-variables-list'
 
 const Wrapper = styled.div`
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     align-items: stretch;
-    padding: 1rem;
     &:not(:last-child) {
         border-bottom: 1px solid var(--color-eggplant-light);
     }
@@ -21,90 +20,109 @@ const Wrapper = styled.div`
 
 // Name
 
-const Name = styled(Heading)`
-    padding: 0;
-    margin: 0 0 0 1rem;
+const Name = styled(Subheading)`
+    padding: 1rem;
+    margin: 0;
 `
+
 // Details
 
-const Description = styled(Paragraph)`
-    margin: 1rem 0 1rem 1rem;
+const Instructions = styled(Paragraph)`
+    margin: 1rem;
 `
 
 
-const Detail = styled.span`
-`
+const Detail = styled.span``
 
-// Meta details
-
-const Meta = styled.div(({ center, compact }) => `
-    background-color: #eee;
-    padding: 0.5rem;
-    font-size: 90%;
-    display: flex;
-    flex-direction: ${ compact ? 'column' : 'row' };
-    justify-content: ${ compact ? 'flex-start' : center ? 'center' : 'space-between' };
-    align-items: ${ compact ? 'flex-start' : 'center' };
-    ${ Detail } {
-        flex: 1;
-        padding: 0 0.25rem;
-    }
-    & svg {
-        margin: 0 auto;
-    }
-`)
-
-const dbGapLink = (variable, study) => {
-    // variable always has the form "phv987654321.v12.p23"
-    // and the "987654321" portion is used in the dbGap link
-    const matches = variable.match(/^phv(\d+)\.v\d+\.p\d+$/)
-    if (matches) {
-        const [, variableDigits] = variable.match(/^phv(\d+)\.v\d+\.p\d+$/)
-        return variableDigits ? `${ DB_GAP_URL }?study_id=${ study }&phv=${ variableDigits }` : `${ DB_GAP_URL }?study_id=${ study }&phv=${ variable }`
-    } else {
-        return null
-    }
+const collapserStyles = {
+    titleStyle: {
+        backgroundColor: '#eee',
+        borderWidth: '1px 0',
+        borderStyle: 'solid',
+        borderColor: 'var(--color-lightgrey)',
+    },
+    bodyStyle: {
+        backgroundColor: '#ddd',
+    },
 }
 
-export const Result = ({ index, name, variable, study, studyId, description, instructions, graph }) => {
-    const { isCompact } = useWindowWidth()
+const CollapserHeader = styled.div`
+    display: flex;
+    flex-direction: column;
+    @media (min-width: 920px) {
+        flex-direction: row;
+    }
+    justify-content: space-between;
+    padding: 0.5rem 1rem;
+`
+
+const StudyName = styled.div``
+const StudyAccession = styled.div``
+
+const NoKnowledgeGraphsMessage = () => {
+    return (
+        <div>No Knowledge Graphs Found</div>
+    )
+}
+
+export const Result = ({ result, query }) => {
+    const { name, instructions, tag_id } = result // other properties: description, identifiers, optional_targets, search_targets, pk, studies
+    const [knowledgeGraphs, setKnowledgeGraphs] = useState()
+    const { fetchKnowledgeGraphs } = useSearch()
+
+    const handleExpandKnowledgeGraphs = () => {
+        const getKgs = async () => {
+            const kgs = await fetchKnowledgeGraphs(tag_id, query)
+            console.log(kgs)
+            setKnowledgeGraphs(kgs)
+        }
+        if (!knowledgeGraphs) { getKgs() }
+    }
+
+    const handleCollapseKnowledgeGraphs = () => { console.log('closing kgs...') }
 
     return (
-        <Wrapper compact={ isCompact }>
-            <Name><strong>{ index }.</strong> { name }</Name>
-            <Description>
-                { description }
-            </Description>
-            <Collapser
-                titleStyle={{ backgroundColor: '#eee' }}
-                bodyStyle={{ backgroundColor: '#eee', padding: '0 1rem' }}
-                title={
-                    <Meta compact={ isCompact }>
-                        <Detail><strong>Variable:</strong> <a href={ dbGapLink(variable, study) || null } target="_blank" rel="noopener noreferrer">{ variable }</a></Detail>
-                        <Detail><strong>Study:</strong> { study }</Detail>
-                    </Meta>
-                }
-                ariaId={ `${ index }-${ name }` }
+        <Wrapper>
+            <Name>Harmonized Variable: { name }</Name>
+            <Instructions>
+                <strong>Instructions</strong>: { instructions }
+            </Instructions>
+            <Collapser key={ `${ name } kg` } ariaId={ `${ name } kg` } { ...collapserStyles }
+                title={ <CollapserHeader>Knowledge Graph</CollapserHeader> }
+                openHandler={ handleExpandKnowledgeGraphs }
+                closeHandler={ handleCollapseKnowledgeGraphs }
             >
-                <Paragraph>
-                    <strong>Instructions:</strong> { instructions }
-                </Paragraph>
-
-                { graph && <KnowledgeGraph graph={ graph } /> }
-
+                { knowledgeGraphs ? <KnowledgeGraphs graphs={ knowledgeGraphs } /> : 'Fetching Knowlege Graphs...' }
             </Collapser>
-
+            {
+                result.studies.map(({ study_id, study_name, variables }) => (
+                    <Collapser key={ `${ name } ${ study_id }` } ariaId={ 'studies' } { ...collapserStyles }
+                        title={
+                            <CollapserHeader>
+                                <StudyName><strong>Study</strong>: { study_name }</StudyName>
+                                <StudyAccession><strong>Accession</strong>: { study_id.replace(/^TOPMED\.STUDY:/, '') }</StudyAccession>
+                            </CollapserHeader>
+                        }
+                    >
+                        <VariablesList studyId={ study_id.replace(/^TOPMED\.STUDY:/, '') } variables={ variables } />
+                    </Collapser>
+                ))
+            }
         </Wrapper>
     )
 }
 
 Result.propTypes = {
-    name: PropTypes.string.isRequired,
-    variable: PropTypes.string.isRequired,
-    study: PropTypes.string.isRequired,
-    index: PropTypes.number.isRequired,
-    studyId: PropTypes.string.isRequired,
-    description: PropTypes.string.isRequired,
-    instructions: PropTypes.string.isRequired,
-    graph: PropTypes.object.isRequired,
+    result: PropTypes.shape({
+        name:PropTypes.string.isRequired,
+        description:PropTypes.string.isRequired,
+        identifiers:PropTypes.array.isRequired,
+        instructions:PropTypes.string.isRequired,
+        knowledge_graph:PropTypes.object.isRequired,
+        optional_targets:PropTypes.array.isRequired,
+        search_targets:PropTypes.array.isRequired,
+        pk:PropTypes.number.isRequired,
+        studies:PropTypes.array.isRequired,
+        tag_id:PropTypes.string.isRequired,
+    })
 }

@@ -52,16 +52,23 @@ const Body = styled.div(({ active, height }) => `
     opacity: ${ active ? 1 : 0 };
 `)
 
-export const Collapser = ({ title, ariaId, titleStyle, bodyStyle, children }) => {
+export const Collapser = ({ title, ariaId, titleStyle, bodyStyle, children, openHandler, closeHandler }) => {
     const [active, setActive] = useState(false)
     const [bodyHeight, setBodyHeight] = useState(0)
     const contentElement = useRef(null)
 
-    const handleToggle = () => setActive(!active)
+    const handleToggle = () => {
+        setActive(!active)
+        if (active && closeHandler) { closeHandler() }
+        if (!active && openHandler) {
+            openHandler()
+            setTimeout(() => setBodyHeight(active ? contentElement.current.scrollHeight : 0), 100)
+        }
+    }
     
     useEffect(() => {
-        setBodyHeight(active ? contentElement.current.scrollHeight : 0)
-    }, [active])
+        setTimeout(() => setBodyHeight(active ? contentElement.current.scrollHeight : 0), 100)
+    }, [active, children])
 
     return (
         <Wrapper>
@@ -88,4 +95,6 @@ Collapser.propTypes = {
     title: PropTypes.node.isRequired,
     ariaId: PropTypes.string.isRequired,
     children: PropTypes.node.isRequired,
+    openHandler: PropTypes.func,
+    closeHandler: PropTypes.func,
 }

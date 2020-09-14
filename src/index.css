@@ -25,3 +25,14 @@ body {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }
+
+a {
+    color: var(--color-blueberry);
+    text-decoration-color: var(--color-blueberry-light);
+    transition: text-decoration-color 250ms;
+    text-underline-offset: 0.1em;
+}
+a:hover, a:active {
+    text-decoration-color: var(--color-blueberry);
+}
+
