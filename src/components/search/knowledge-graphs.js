@@ -1,6 +1,5 @@
 import React, { Fragment, useEffect, useState } from 'react'
 import styled from 'styled-components'
-import PropTypes from 'prop-types'
 
 const InteractionsGrid = styled.div`
     display: grid;
@@ -89,8 +88,6 @@ const NoKnowledgeGraphsMessage = () => {
 }
 
 export const KnowledgeGraphs = ({ graphs }) => {
-    const [interactions, setInteractions] = useState([])
-    
     if (graphs.length) {
         return (
             <InteractionsGrid>

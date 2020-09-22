@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import PropTypes from 'prop-types'
-import axios from 'axios'
 import styled from 'styled-components'
 import { useSearch } from '../../hooks'
 import { Subheading, Paragraph } from '../typography'
@@ -32,8 +31,6 @@ const Instructions = styled(Paragraph)`
 `
 
 
-const Detail = styled.span``
-
 const collapserStyles = {
     titleStyle: {
         backgroundColor: '#eee',
@@ -59,12 +56,6 @@ const CollapserHeader = styled.div`
 const StudyName = styled.div``
 const StudyAccession = styled.div``
 
-const NoKnowledgeGraphsMessage = () => {
-    return (
-        <div>No Knowledge Graphs Found</div>
-    )
-}
-
 export const Result = ({ result, query }) => {
     const { name, instructions, tag_id } = result // other properties: description, identifiers, optional_targets, search_targets, pk, studies
     const [knowledgeGraphs, setKnowledgeGraphs] = useState()
@@ -87,13 +78,6 @@ export const Result = ({ result, query }) => {
             <Instructions>
                 <strong>Instructions</strong>: { instructions }
             </Instructions>
-            <Collapser key={ `${ name } kg` } ariaId={ `${ name } kg` } { ...collapserStyles }
-                title={ <CollapserHeader>Knowledge Graph</CollapserHeader> }
-                openHandler={ handleExpandKnowledgeGraphs }
-                closeHandler={ handleCollapseKnowledgeGraphs }
-            >
-                { knowledgeGraphs ? <KnowledgeGraphs graphs={ knowledgeGraphs } /> : 'Fetching Knowlege Graphs...' }
-            </Collapser>
             {
                 result.studies.map(({ study_id, study_name, variables }) => (
                     <Collapser key={ `${ name } ${ study_id }` } ariaId={ 'studies' } { ...collapserStyles }
@@ -108,6 +92,13 @@ export const Result = ({ result, query }) => {
                     </Collapser>
                 ))
             }
+            <Collapser key={ `${ name } kg` } ariaId={ `${ name } kg` } { ...collapserStyles }
+                title={ <CollapserHeader>Knowledge Graph</CollapserHeader> }
+                openHandler={ handleExpandKnowledgeGraphs }
+                closeHandler={ handleCollapseKnowledgeGraphs }
+            >
+                { knowledgeGraphs ? <KnowledgeGraphs graphs={ knowledgeGraphs } /> : 'Fetching Knowlege Graphs...' }
+            </Collapser>
         </Wrapper>
     )
 }

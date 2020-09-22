@@ -11,7 +11,7 @@ const colors = {
 
 const Wrapper = styled.div(({ color }) => `
     display: flex;
-    margin: 1rem 0 2rem 0;
+    margin: 2rem;
     justify-content: center;
     align-items: center;
     border-width: 1px;
@@ -20,7 +20,7 @@ const Wrapper = styled.div(({ color }) => `
     border-radius: 4px;
     color: ${ color };
     border-color: ${ color };
-    background-color: #ffffff99;
+    background-color: #ffffff;
 `)
 
 const Message = styled.span(({ color }) => `

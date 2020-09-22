@@ -10,20 +10,20 @@ import { Alert } from './components/alert'
 import { useSearch } from './hooks'
 import { IconButton } from './components/buttons'
 import { ChevronLeftIcon, ChevronRightIcon, FirstPageIcon, LastPageIcon } from './components/icons'
+import asciiLogo from './logo'
 
 const App = () => {
-    const [query, setQuery] = useState('heart')
+    const [query, setQuery] = useState('')
     const [resultIndex, setResultIndex] = useState(0)
     const [searchedQuery, setSearchedQuery] = useState('')
-    const { isLoadingResults, isLoadingResultsKg, error, results, totalItems, fetchResults } = useSearch()
+    const { isLoadingResults, error, results, totalItems, fetchResults } = useSearch()
 
-    useEffect(() => {
-        doSearch()
-    }, [])
+    useEffect(() => console.log(asciiLogo), [])
 
     const doSearch = () => {
         fetchResults(query)
         setSearchedQuery(query)
+        setResultIndex(0)
     }
 
     const goToResult = newIndex => () => {
