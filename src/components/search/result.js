@@ -6,6 +6,7 @@ import { Subheading, Paragraph } from '../typography'
 import { Collapser } from '../collapser'
 import { KnowledgeGraphs } from '../search'
 import { VariablesList } from './study-variables-list'
+import { accessionLink } from '../../utils'
 
 const Wrapper = styled.div`
     display: flex;
@@ -84,7 +85,10 @@ export const Result = ({ result, query }) => {
                         title={
                             <CollapserHeader>
                                 <StudyName><strong>Study</strong>: { study_name }</StudyName>
-                                <StudyAccession><strong>Accession</strong>: { study_id.replace(/^TOPMED\.STUDY:/, '') }</StudyAccession>
+                                <StudyAccession>
+                                    <strong>Accession</strong>: 
+                                    <a href={ accessionLink(study_id.replace(/^TOPMED\.STUDY:/, '')) } rel="noopener noreferrer">{ study_id.replace(/^TOPMED\.STUDY:/, '') }</a>
+                                </StudyAccession>
                             </CollapserHeader>
                         }
                     >
