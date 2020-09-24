@@ -7,7 +7,7 @@ import {
 } from './components/search'
 import { LoadingDots } from './components/loading-dots'
 import { Alert } from './components/alert'
-import { useSearch } from './hooks'
+import { useLocalStorage, useSearch } from './hooks'
 import { IconButton } from './components/buttons'
 import { ChevronLeftIcon, ChevronRightIcon, FirstPageIcon, LastPageIcon } from './components/icons'
 import asciiLogo from './logo'
@@ -16,6 +16,7 @@ const App = () => {
     const [query, setQuery] = useState('')
     const [resultIndex, setResultIndex] = useState(0)
     const [searchedQuery, setSearchedQuery] = useState('')
+    const [searchHistory, setSearchHistory] = useLocalStorage('dug-search-history', new Array())
     const { isLoadingResults, error, results, totalItems, fetchResults } = useSearch()
 
     useEffect(() => console.log(asciiLogo), [])
@@ -24,6 +25,8 @@ const App = () => {
         fetchResults(query)
         setSearchedQuery(query)
         setResultIndex(0)
+        console.log(searchHistory)
+        setSearchHistory(searchHistory => [ ...searchHistory, query])
     }
 
     const goToResult = newIndex => () => {
