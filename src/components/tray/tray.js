@@ -4,7 +4,7 @@ import styled from 'styled-components'
 import { ChevronDownIcon } from '../icons'
 
 const Wrapper = styled.div`
-  background-color: var(--color-lightgrey);
+  background-color: #dde;
   position: fixed;
   bottom: 0;
   left: 0;
@@ -13,6 +13,7 @@ const Wrapper = styled.div`
 
 const Header = styled.div`
   font-weight: bold;
+  cursor: pointer;
   color: #333;
   display: flex;
   flex-direction: row;
@@ -34,6 +35,7 @@ const OpenIndicator = styled.div(({ active }) => `
 `)
 
 const Content = styled.div(({ height }) => `
+  background-color: #ccd;
   transition: max-height 250ms;
   max-height: ${ height }px;
   overflow: hidden;
@@ -55,7 +57,6 @@ export const Tray = ({ title, children }) => {
       </Header>
       <Content height={ active ? '200' : '0' }>
         { children }
-        <br />
       </Content>
     </Wrapper>
   )
