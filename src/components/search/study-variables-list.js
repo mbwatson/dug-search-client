@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { dbGapStudyLink } from '../../utils'
+import { dbGapLink } from '../../utils'
 
 const Wrapper = styled.div`
     flex-direction: column;
@@ -29,7 +29,7 @@ export const VariablesList = ({ studyId, variables }) => {
                 {
                     variables.map(variable => (
                         <ListItem key={ variable }>
-                            <VariableLink to={ dbGapStudyLink(studyId, variable) || null }>{ variable }</VariableLink>
+                            <VariableLink to={ dbGapLink.variable(studyId, variable) || null }>{ variable }</VariableLink>
                         </ListItem>
                     ))
                 }

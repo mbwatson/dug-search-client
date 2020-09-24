@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import { useSearch } from '../../hooks'
@@ -6,7 +6,8 @@ import { Subheading, Paragraph } from '../typography'
 import { Collapser } from '../collapser'
 import { KnowledgeGraphs } from '../search'
 import { VariablesList } from './study-variables-list'
-import { accessionLink } from '../../utils'
+import { dbGapLink } from '../../utils'
+import { ExternalLink } from '../external-link'
 
 const Wrapper = styled.div`
     display: flex;
@@ -27,7 +28,7 @@ const Name = styled(Subheading)`
 
 // Details
 
-const Instructions = styled(Paragraph)`
+const ResultParagraph = styled(Paragraph)`
     margin: 1rem;
 `
 
@@ -58,36 +59,39 @@ const StudyName = styled.div``
 const StudyAccession = styled.div``
 
 export const Result = ({ result, query }) => {
-    const { name, instructions, tag_id } = result // other properties: description, identifiers, optional_targets, search_targets, pk, studies
-    const [knowledgeGraphs, setKnowledgeGraphs] = useState()
+    const { name, description, instructions, tag_id } = result // other properties: description, identifiers, optional_targets, search_targets, pk, studies
+    const [knowledgeGraphs, setKnowledgeGraphs] = useState([])
     const { fetchKnowledgeGraphs } = useSearch()
 
-    const handleExpandKnowledgeGraphs = () => {
+    useEffect(() => {
         const getKgs = async () => {
             const kgs = await fetchKnowledgeGraphs(tag_id, query)
-            console.log(kgs)
             setKnowledgeGraphs(kgs)
         }
-        if (!knowledgeGraphs) { getKgs() }
-    }
-
-    const handleCollapseKnowledgeGraphs = () => { console.log('closing kgs...') }
+        getKgs()
+    }, [])
 
     return (
         <Wrapper>
             <Name>Harmonized Variable: { name }</Name>
-            <Instructions>
+            <ResultParagraph>
+                <strong>Description</strong>: { description }
+            </ResultParagraph>
+            <ResultParagraph>
                 <strong>Instructions</strong>: { instructions }
-            </Instructions>
+            </ResultParagraph>
             {
                 result.studies.map(({ study_id, study_name, variables }) => (
                     <Collapser key={ `${ name } ${ study_id }` } ariaId={ 'studies' } { ...collapserStyles }
                         title={
                             <CollapserHeader>
-                                <StudyName><strong>Study</strong>: { study_name }</StudyName>
+                                <StudyName>
+                                    <strong>Study</strong>:
+                                    <ExternalLink to={ dbGapLink.study(study_id.replace(/^TOPMED\.STUDY:/, '')) } >{ study_name }</ExternalLink>
+                                </StudyName>
                                 <StudyAccession>
                                     <strong>Accession</strong>: 
-                                    <a href={ accessionLink(study_id.replace(/^TOPMED\.STUDY:/, '')) } rel="noopener noreferrer">{ study_id.replace(/^TOPMED\.STUDY:/, '') }</a>
+                                    <ExternalLink to={ dbGapLink.study(study_id.replace(/^TOPMED\.STUDY:/, '')) } >{ study_id.replace(/^TOPMED\.STUDY:/, '') }</ExternalLink>
                                 </StudyAccession>
                             </CollapserHeader>
                         }
@@ -96,13 +100,13 @@ export const Result = ({ result, query }) => {
                     </Collapser>
                 ))
             }
-            <Collapser key={ `${ name } kg` } ariaId={ `${ name } kg` } { ...collapserStyles }
-                title={ <CollapserHeader>Knowledge Graph</CollapserHeader> }
-                openHandler={ handleExpandKnowledgeGraphs }
-                closeHandler={ handleCollapseKnowledgeGraphs }
-            >
-                { knowledgeGraphs ? <KnowledgeGraphs graphs={ knowledgeGraphs } /> : 'Fetching Knowlege Graphs...' }
-            </Collapser>
+            {
+                knowledgeGraphs.length > 0 && (
+                    <Collapser key={ `${ name } kg` } ariaId={ `${ name } kg` } { ...collapserStyles } title={ <CollapserHeader>Knowledge Graph</CollapserHeader> }>
+                        <KnowledgeGraphs graphs={ knowledgeGraphs } />
+                    </Collapser>
+                )
+            }
         </Wrapper>
     )
 }
@@ -113,7 +117,6 @@ Result.propTypes = {
         description:PropTypes.string.isRequired,
         identifiers:PropTypes.array.isRequired,
         instructions:PropTypes.string.isRequired,
-        knowledge_graph:PropTypes.object.isRequired,
         optional_targets:PropTypes.array.isRequired,
         search_targets:PropTypes.array.isRequired,
         pk:PropTypes.number.isRequired,
