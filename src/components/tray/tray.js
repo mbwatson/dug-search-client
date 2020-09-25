@@ -52,13 +52,14 @@ const OpenIndicator = styled.div(({ active }) => `
     }
 `)
 
-const Content = styled.div(({ height }) => `
+const Content = styled.div(({ active }) => `
   background-color: #111;
   color: #ddd;
-  transition: max-height 250ms;
-  max-height: ${ height }px;
+  transition: ${ active ? 'max-height 250ms, filter 250ms 50ms' : 'max-height 250ms 50ms, filter 250ms'};
+  max-height: ${ active ? '300px' : '0' };
   overflow: hidden;
   padding: 0 1rem;
+  filter: brightness(${ active ? 1 : 0 });
   & a {
     color: #eee;
     text-decoration: underline;
@@ -79,7 +80,7 @@ export const Tray = ({ title, children }) => {
             <ChevronDownIcon size={ 24 } fill="#eef" active={ active } />
         </OpenIndicator>
       </Header>
-      <Content height={ active ? '300' : '0' }>
+      <Content active={ active }>
         { children }
       </Content>
     </Wrapper>
