@@ -40,7 +40,7 @@ export const SearchInput = styled.input`
     font-weight: bold;
 `
 
-export const SearchForm = ({ value, placeholder, changeHandler, keyDownHandler, submitHandler }) => {
+export const SearchForm = ({ value = '', placeholder, changeHandler, keyDownHandler, submitHandler }) => {
     return (
         <Wrapper>
             <SearchInput value={ value } placeholder={ placeholder } onChange={ changeHandler } onKeyDown={ keyDownHandler } />
