@@ -1,12 +1,12 @@
-# HeLx Search Client
+# DUG Search Client
 
 This is a stand-alone client to use [DUG](https://github.com/helxplatform/dug)This is a [React](https://reactjs.org/) app containerized for development and production with [Docker Compose](https://docs.docker.com/compose/).
 
 ## Environment Variables
 
-Define the API URL for DUG as the environment variable `REACT_APP_HELX_PATH` in `.env`. use `.env.example` as a guide. The development server will be accessible on port 3030, unless the variable `CLIENT_PORT` is specified differently in `.env`.
+Define the API URL for DUG as the environment variable `REACT_APP_HELX_PATH` in `.env`. Use `.env.example` as a guide. The development server will be accessible on port 3030, unless the variable `CLIENT_PORT` is specified differently in `.env`.
 
-Production deeployment defaults to port 80.
+Production deployment defaults to port 80.
 
 ## Development
 
