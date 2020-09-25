@@ -31,18 +31,18 @@ const HistoryListItem = styled.div`
   background-color: #112;
   display: flex;
   transition: background-color 500ms;
-  .search-time {
-    color: var(--color-lightgrey);
-  }
   .search-query {
     color: #eee;
   }
   .search-again {
-    flex: 1;
-    text-align: right;
     color: #eee;
     opacity: 0;
     transition: opacity 250ms 0;
+  }
+  .search-time {
+    flex: 1;
+    text-align: right;
+    color: var(--color-lightgrey);
   }
   &:hover {
     background-color: #223;
@@ -177,9 +177,9 @@ const App = () => {
                         <Tray title="Search History">
                             <HistoryList items={ searchHistory.map(item => (
                                 <HistoryListItem onClick={ () => doSearchFromHistory(item.query) }>
-                                    <span className="search-time">{ relativeTime(Date.now(), item.timestamp) }&nbsp;&mdash;&nbsp;</span>
                                     <span className="search-query">"{ item.query }"</span>
-                                    <span className="search-again">Search this again</span>
+                                    <span className="search-again">&nbsp;&mdash;&nbsp;Search this again</span>
+                                    <span className="search-time">{ relativeTime(Date.now(), item.timestamp) }</span>
                                 </HistoryListItem>
                             )) } />
                         </Tray>
