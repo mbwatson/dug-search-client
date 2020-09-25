@@ -10,7 +10,7 @@ import { Alert } from './components/alert'
 import { useLocalStorage, useSearch } from './hooks'
 import { IconButton } from './components/buttons'
 import { ChevronLeftIcon, ChevronRightIcon, FirstPageIcon, LastPageIcon } from './components/icons'
-import { useTray, Tray } from './components/tray'
+import { Tray, useTray } from './components/tray'
 import { List } from './components/list'
 import asciiLogo from './logo'
 
@@ -44,7 +44,8 @@ const App = () => {
 
     const doSearch = q => {
         // we trigger a new search by adding query to the front of the history array
-        if (q) {
+        // first, let's see if it's not just whitespace
+        if (q.trim()) {
             setSearchHistory(searchHistory => [q, ...searchHistory].slice(0, HISTORY_LENGTH))
         }
     }
