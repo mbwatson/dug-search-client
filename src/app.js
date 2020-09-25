@@ -46,9 +46,10 @@ const App = () => {
     const doSearch = q => {
         // we trigger a new search by adding query to the front of the history array
         // first, let's see if it's not just whitespace
-        if (q.trim()) {
+        const trimmedQuery = q.trim()
+        if (trimmedQuery) {
             const newHistoryItem = {
-                query: q.trim(),
+                query: trimmedQuery,
                 timestamp: Date.now(),
             }
             setSearchHistory(searchHistory => [newHistoryItem, ...searchHistory].slice(0, HISTORY_LENGTH))
@@ -139,8 +140,7 @@ const App = () => {
                                     &nbsp;&mdash;&nbsp;
                                     "<a href="#" onClick={ () => doSearchFromHistory(item.query) }>{ item.query }</a>"
                                 </Fragment>
-                            ))
-                            } />
+                            )) } />
                         </Tray>
                     )
                 }
