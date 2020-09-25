@@ -131,6 +131,8 @@ const App = () => {
                     )
                 }
 
+                <br/><br/>
+ 
                 {
                     searchHistory.length > 0 && (
                         <Tray title="Search History">
