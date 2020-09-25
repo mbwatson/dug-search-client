@@ -5,9 +5,7 @@ import { ChevronDownIcon } from '../icons'
 
 export const TrayContext = React.createContext({})
 
-export const useTray = () => {
-  return useContext(TrayContext)
-}
+export const useTray = () => useContext(TrayContext)
 
 export const TrayProvider = ({ children }) => {
   const [active, setActive] = useState(false)
