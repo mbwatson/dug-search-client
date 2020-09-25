@@ -67,7 +67,7 @@ export const Collapser = ({ title, ariaId, titleStyle, bodyStyle, children, open
     }
     
     useEffect(() => {
-        setTimeout(() => setBodyHeight(active ? contentElement.current.scrollHeight : 0), 100)
+        setTimeout(() => setBodyHeight((active && contentElement.current) ? contentElement.current.scrollHeight : 0), 100)
     }, [active, children])
 
     return (
