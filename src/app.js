@@ -1,4 +1,5 @@
 import React, { Fragment, useContext, useEffect, useState } from 'react'
+import styled from 'styled-components'
 import { Main } from './components/main'
 import { Title, Heading, Paragraph } from './components/typography'
 import {
@@ -15,7 +16,45 @@ import { List } from './components/list'
 import { relativeTime } from './utils'
 import asciiLogo from './logo'
 
+//
+
 const HISTORY_LENGTH = 10
+
+const HistoryList = styled(List)`
+  padding: 0.5rem 0;
+`
+
+const HistoryListItem = styled.div`
+  width: 100%;
+  padding: 1rem;
+  cursor: pointer;
+  background-color: #112;
+  display: flex;
+  transition: background-color 500ms;
+  .search-time {
+    color: var(--color-lightgrey);
+  }
+  .search-query {
+    color: #eee;
+  }
+  .search-again {
+    flex: 1;
+    text-align: right;
+    color: #eee;
+    opacity: 0;
+    transition: opacity 250ms 0;
+  }
+  &:hover {
+    background-color: #223;
+    transition: background-color 250ms;
+    .search-again {
+      opacity: 0.5;
+      transition: opacity 250ms 250ms;
+    }
+  }
+`
+
+//
 
 const App = () => {
     const [query, setQuery] = useState('')
@@ -48,11 +87,11 @@ const App = () => {
         // first, let's see if it's not just whitespace
         const trimmedQuery = q.trim()
         if (trimmedQuery) {
-            const newHistoryItem = {
+            const newHistoryListItem = {
                 query: trimmedQuery,
                 timestamp: Date.now(),
             }
-            setSearchHistory(searchHistory => [newHistoryItem, ...searchHistory].slice(0, HISTORY_LENGTH))
+            setSearchHistory(searchHistory => [newHistoryListItem, ...searchHistory].slice(0, HISTORY_LENGTH))
         }
     }
 
@@ -136,12 +175,12 @@ const App = () => {
                 {
                     searchHistory.length > 0 && (
                         <Tray title="Search History">
-                            <List items={ searchHistory.map(item => (
-                                <Fragment>
-                                    { relativeTime(Date.now(), item.timestamp) }
-                                    &nbsp;&mdash;&nbsp;
-                                    "<a href="#" onClick={ () => doSearchFromHistory(item.query) }>{ item.query }</a>"
-                                </Fragment>
+                            <HistoryList items={ searchHistory.map(item => (
+                                <HistoryListItem onClick={ () => doSearchFromHistory(item.query) }>
+                                    <span className="search-time">{ relativeTime(Date.now(), item.timestamp) }&nbsp;&mdash;&nbsp;</span>
+                                    <span className="search-query">"{ item.query }"</span>
+                                    <span className="search-again">Search this again</span>
+                                </HistoryListItem>
                             )) } />
                         </Tray>
                     )
