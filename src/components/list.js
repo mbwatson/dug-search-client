@@ -7,7 +7,9 @@ const Wrapper = styled.ul(({ bullets }) => `
   padding: ${ bullets === 'none' ? '0' : '1rem' };
 `)
 
-const ListItem = styled.li``
+const ListItem = styled.li`
+  padding: 0.25rem 0;
+`
 
 export const List = ({ items, bullets = 'none' }) => {
   return (
