@@ -12,6 +12,7 @@ import { IconButton } from './components/buttons'
 import { ChevronLeftIcon, ChevronRightIcon, FirstPageIcon, LastPageIcon } from './components/icons'
 import { Tray, useTray } from './components/tray'
 import { List } from './components/list'
+import { relativeTime } from './utils'
 import asciiLogo from './logo'
 
 const HISTORY_LENGTH = 10
@@ -34,9 +35,9 @@ const App = () => {
         // so that form starts blank and results are empty
         if (!firstRender) {
             // use first item in history array for search query
-            fetchResults(searchHistory[0])
-            setQuery(searchHistory[0])
-            setSearchedQuery(searchHistory[0])
+            fetchResults(searchHistory[0].query)
+            setQuery(searchHistory[0].query)
+            setSearchedQuery(searchHistory[0].query)
             closeTray()
             setResultIndex(0)
         }
@@ -46,7 +47,11 @@ const App = () => {
         // we trigger a new search by adding query to the front of the history array
         // first, let's see if it's not just whitespace
         if (q.trim()) {
-            setSearchHistory(searchHistory => [q, ...searchHistory].slice(0, HISTORY_LENGTH))
+            const newHistoryItem = {
+                query: q.trim(),
+                timestamp: Date.now(),
+            }
+            setSearchHistory(searchHistory => [newHistoryItem, ...searchHistory].slice(0, HISTORY_LENGTH))
         }
     }
 
@@ -128,7 +133,14 @@ const App = () => {
                 {
                     searchHistory.length > 0 && (
                         <Tray title="Search History">
-                            <List items={ searchHistory.map(item => <a href="#" onClick={ () => doSearchFromHistory(item) }>{ item }</a>) } />
+                            <List items={ searchHistory.map(item => (
+                                <Fragment>
+                                    { relativeTime(Date.now(), item.timestamp) }
+                                    &nbsp;&mdash;&nbsp;
+                                    "<a href="#" onClick={ () => doSearchFromHistory(item.query) }>{ item.query }</a>"
+                                </Fragment>
+                            ))
+                            } />
                         </Tray>
                     )
                 }
