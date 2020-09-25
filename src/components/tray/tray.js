@@ -63,9 +63,8 @@ const Content = styled.div(({ active }) => `
   background-color: #111;
   color: #ddd;
   transition: ${ active ? 'max-height 250ms, filter 250ms 50ms' : 'max-height 250ms 50ms, filter 250ms'};
-  max-height: ${ active ? '300px' : '0' };
+  max-height: ${ active ? '600px' : '0' };
   overflow: hidden;
-  padding: 0 1rem;
   filter: brightness(${ active ? 1 : 0 });
   & a {
     color: #eee;
