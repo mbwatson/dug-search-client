@@ -41,7 +41,7 @@ const App = () => {
 
     return (
         <Main>
-            <Title center>DUG Search</Title>
+            <Title center>Search</Title>
 
             <br/><br/>
  
