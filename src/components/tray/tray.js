@@ -47,9 +47,8 @@ const OpenIndicator = styled.div(({ active }) => `
     justify-content: center;
     align-items: center;
     svg {
-        transition: fill 500ms, filter 250ms, transform 500ms;
+        transition: filter 250ms, transform 500ms;
         transform: rotate(${ active ? '0' : '180deg' });
-        fill: ${ active ? 'var(--color-crimson)' : '#eef' };
     }
 `)
 
@@ -76,7 +75,7 @@ export const Tray = ({ title, children }) => {
       <Header onClick={ toggleTray }>
         <div className="title">{ title }</div>
         <OpenIndicator active={ active }>
-            <ChevronDownIcon size={ 24 } active={ active } />
+            <ChevronDownIcon size={ 24 } fill="#eef" active={ active } />
         </OpenIndicator>
       </Header>
       <Content height={ active ? '300' : '0' }>
