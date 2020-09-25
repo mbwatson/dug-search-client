@@ -128,13 +128,7 @@ const App = () => {
                 {
                     searchHistory.length > 0 && (
                         <Tray title="Search History">
-                            <List items={
-                                searchHistory.map(item => (
-                                    <Fragment>
-                                        <a href="#" onClick={ () => doSearchFromHistory(item) }>{ item }</a>
-                                    </Fragment>
-                                ))
-                            } />
+                            <List items={ searchHistory.map(item => <a href="#" onClick={ () => doSearchFromHistory(item) }>{ item }</a>) } />
                         </Tray>
                     )
                 }
