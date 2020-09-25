@@ -27,6 +27,7 @@ const Wrapper = styled.div`
   left: 0;
   width: 100%;
   filter: drop-shadow(0 -0.25rem 0.25rem rgba(0, 0, 0, 0.2));
+  z-index: 2;
 `
 
 const Header = styled.div`
