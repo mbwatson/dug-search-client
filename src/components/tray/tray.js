@@ -54,6 +54,7 @@ const OpenIndicator = styled.div(({ active }) => `
 
 const Content = styled.div(({ height }) => `
   background-color: #111;
+  color: #ddd;
   transition: max-height 250ms;
   max-height: ${ height }px;
   overflow: hidden;
