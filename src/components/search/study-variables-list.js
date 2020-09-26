@@ -1,6 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import { dbGapLink } from '../../utils'
+import { List } from '../list'
 
 const Wrapper = styled.div`
     flex-direction: column;
@@ -15,25 +16,11 @@ const VariableLink = styled.a.attrs(props => ({ target: '_blank', rel: 'noopener
     padding: 0.5rem 0;
 `
 
-const List = styled.ul`
-    padding: 0 1rem;
-`
-
-const ListItem = styled.li``
-
 export const VariablesList = ({ studyId, variables }) => {
     return (
         <Wrapper>
             <strong>Variables</strong>
-            <List>
-                {
-                    variables.map(variable => (
-                        <ListItem key={ variable }>
-                            <VariableLink to={ dbGapLink.variable(studyId, variable) || null }>{ variable }</VariableLink>
-                        </ListItem>
-                    ))
-                }
-            </List>
+            <List items={ variables.map(variable => <VariableLink key={ variable } to={ dbGapLink.variable(studyId, variable) || null }>{ variable }</VariableLink>) } />
         </Wrapper>
     )
 }

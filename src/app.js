@@ -1,4 +1,5 @@
-import React, { Fragment, useEffect, useState } from 'react'
+import React, { Fragment, useContext, useEffect, useState } from 'react'
+import styled from 'styled-components'
 import { Main } from './components/main'
 import { Title, Heading, Paragraph } from './components/typography'
 import {
@@ -7,33 +8,103 @@ import {
 } from './components/search'
 import { LoadingDots } from './components/loading-dots'
 import { Alert } from './components/alert'
-import { useSearch } from './hooks'
+import { useLocalStorage, useSearch } from './hooks'
 import { IconButton } from './components/buttons'
 import { ChevronLeftIcon, ChevronRightIcon, FirstPageIcon, LastPageIcon } from './components/icons'
+import { Tray, useTray } from './components/tray'
+import { List } from './components/list'
+import { relativeTime } from './utils'
 import asciiLogo from './logo'
+
+//
+
+const HISTORY_LENGTH = 10
+
+const HistoryList = styled(List)`
+  padding: 0.5rem 0;
+`
+
+const HistoryListItem = styled.div`
+  width: 100%;
+  padding: 1rem;
+  cursor: pointer;
+  background-color: #112;
+  display: flex;
+  transition: background-color 500ms;
+  .search-query {
+    color: #eee;
+  }
+  .search-again {
+    color: #eee;
+    opacity: 0;
+    transition: opacity 250ms 0;
+  }
+  .search-time {
+    flex: 1;
+    text-align: right;
+    color: var(--color-lightgrey);
+  }
+  &:hover {
+    background-color: #223;
+    transition: background-color 250ms;
+    .search-again {
+      opacity: 0.5;
+      transition: opacity 250ms 250ms;
+    }
+  }
+`
+
+//
 
 const App = () => {
     const [query, setQuery] = useState('')
     const [resultIndex, setResultIndex] = useState(0)
     const [searchedQuery, setSearchedQuery] = useState('')
+    const [searchHistory, setSearchHistory] = useLocalStorage('dug-search-history', [])
     const { isLoadingResults, error, results, totalItems, fetchResults } = useSearch()
+    const [firstRender, setFirstRender] = useState(true)
+    const { closeTray, toggleTray } = useTray()
 
     useEffect(() => console.log(asciiLogo), [])
 
-    const doSearch = () => {
-        fetchResults(query)
-        setSearchedQuery(query)
-        setResultIndex(0)
+    useEffect(() => setFirstRender(false), [])
+
+    useEffect(() => {
+        // do not pull query off history for first render
+        // so that form starts blank and results are empty
+        if (!firstRender) {
+            // use first item in history array for search query
+            fetchResults(searchHistory[0].query)
+            setQuery(searchHistory[0].query)
+            setSearchedQuery(searchHistory[0].query)
+            closeTray()
+            setResultIndex(0)
+        }
+    }, [searchHistory])
+
+    const doSearch = q => {
+        // we trigger a new search by adding query to the front of the history array
+        // first, let's see if it's not just whitespace
+        const trimmedQuery = q.trim()
+        if (trimmedQuery) {
+            const newHistoryListItem = {
+                query: trimmedQuery,
+                timestamp: Date.now(),
+            }
+            setSearchHistory(searchHistory => [newHistoryListItem, ...searchHistory].slice(0, HISTORY_LENGTH))
+        }
     }
 
-    const goToResult = newIndex => () => {
-        setResultIndex(newIndex)
+    const doSearchFromHistory = q => {
+        closeTray()
+        doSearch(q)
     }
 
     const handleChangeQuery = event => setQuery(event.target.value)
-    const handleSubmit = event => doSearch()
-    const handleKeyDown = event => { if (event.keyCode === 13) doSearch() }
+    const handleSubmit = event => doSearch(query)
+    const handleKeyDown = event => { if (event.keyCode === 13) doSearch(query) }
 
+    const goToResult = newIndex => () => setResultIndex(newIndex)
     const goToFirstResult = event => { setResultIndex(0) }
     const goToPreviousResult = event => { setResultIndex(resultIndex => resultIndex - 1) }
     const goToNextResult = event => { setResultIndex(resultIndex => resultIndex + 1) }
@@ -96,6 +167,22 @@ const App = () => {
                             firstPageHandler={ resultIndex === 0 ? null : goToFirstResult }
                             lastPageHandler={ resultIndex < totalItems - 1 ? goToLastResult : null }
                         />
+                    )
+                }
+
+                <br/><br/>
+ 
+                {
+                    searchHistory.length > 0 && (
+                        <Tray title="Search History">
+                            <HistoryList items={ searchHistory.map(item => (
+                                <HistoryListItem onClick={ () => doSearchFromHistory(item.query) }>
+                                    <span className="search-query">"{ item.query }"</span>
+                                    <span className="search-again">&nbsp;&mdash;&nbsp;Search this again</span>
+                                    <span className="search-time">{ relativeTime(Date.now(), item.timestamp) }</span>
+                                </HistoryListItem>
+                            )) } />
+                        </Tray>
                     )
                 }
 

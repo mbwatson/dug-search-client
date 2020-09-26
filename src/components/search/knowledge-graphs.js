@@ -94,7 +94,7 @@ export const KnowledgeGraphs = ({ graphs }) => {
                 <div className="column-title">Ontological Term (ID)</div>
                 <div className="column-title">Interaction Type [publication link(s)]</div>
                 <div className="column-title">Linked Term (ID)</div>
-                { graphs.map(graph => <KnowledgeGraph graph={ graph } />) }
+                { graphs.map((graph, i) => <KnowledgeGraph key={ `graph-${ i }` } graph={ graph } />) }
             </InteractionsGrid>
         )
     }

@@ -3,10 +3,13 @@ import ReactDOM from 'react-dom'
 import App from './app'
 import './index.css'
 import * as serviceWorker from './serviceWorker'
+import { TrayProvider } from './components/tray'
 
 ReactDOM.render(
     <React.StrictMode>
-        <App />
+        <TrayProvider>
+            <App />
+        </TrayProvider>
     </React.StrictMode>,
     document.getElementById('root')
 )
