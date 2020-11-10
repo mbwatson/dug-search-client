@@ -41,8 +41,6 @@ const App = () => {
 
     return (
         <Main>
-            <Title center>Search</Title>
-
             <br/><br/>
  
             <section>
