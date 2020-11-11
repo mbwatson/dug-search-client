@@ -41,6 +41,8 @@ const App = () => {
 
     return (
         <Main>
+            <Title>Semantic Search</Title>
+            
             <br/><br/>
  
             <section>
