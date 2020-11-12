@@ -1,6 +1,6 @@
 {
   "name": "helx-search-client",
-  "version": "0.3.4",
+  "version": "0.3.6",
   "private": true,
   "dependencies": {
     "@testing-library/jest-dom": "^4.2.4",

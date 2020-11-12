@@ -38,6 +38,7 @@ export const useSearch = () => {
             index: 'test_kg',
             unique_id: tag_id,
             query: query,
+            size: 100,
         }).then(response => {
             console.log(response.data)
             return response.data.result.hits.hits
