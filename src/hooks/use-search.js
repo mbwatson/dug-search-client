@@ -11,20 +11,19 @@ export const useSearch = () => {
     const [results, setResults] = useState([])
     const [totalItems, setTotalItems] = useState(0)
 
-    const fetchResults = async (query, currentPageNumber, perPage) => {
+    const fetchResults = async query => {
         setResults([])
         setIsLoadingResults(true)
         setError(null)
         await axios.post(SEARCH_URL, {
             index: 'test',
             query: query,
-            offset: perPage * currentPageNumber,
-            size: perPage,
+            size: 100,
         }).then(response => {
             console.log(response.data)
             const hits = response.data.result.total_items === 0 ? [] : response.data.result.hits.hits.map(r => r._source)
             setResults(hits)
-            setTotalItems(hits.length)
+            setTotalItems(response.data.result.total_items)
             setIsLoadingResults(false)
         }).catch(error => {
             setIsLoadingResults(false)
