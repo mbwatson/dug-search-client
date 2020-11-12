@@ -18,7 +18,7 @@ export const useSearch = () => {
         await axios.post(SEARCH_URL, {
             index: 'test',
             query: query,
-            size: 100,
+            size: 1000,
         }).then(response => {
             console.log(response.data)
             const hits = response.data.result.total_items === 0 ? [] : response.data.result.hits.hits.map(r => r._source)
