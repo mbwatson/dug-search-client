@@ -23,7 +23,7 @@ export const useSearch = () => {
             console.log(response.data)
             const hits = response.data.result.total_items === 0 ? [] : response.data.result.hits.hits.map(r => r._source)
             setResults(hits)
-            setTotalItems(response.data.result.total_items)
+            setTotalItems(hits.length)
             setIsLoadingResults(false)
         }).catch(error => {
             setIsLoadingResults(false)
